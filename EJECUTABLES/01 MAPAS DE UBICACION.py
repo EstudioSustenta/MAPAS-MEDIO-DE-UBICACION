@@ -32,6 +32,7 @@ arcpy.env.df = arcpy.mapping.ListDataFrames(mxd)[0]
 df = arcpy.env.df
 
 # Importar el módulo desde el paquete LIBRERIA utilizando importlib
+dbas = importlib.import_module("LIBRERIA.DATOS BASICOS")
 ccapas = importlib.import_module("LIBRERIA.CARGAR CAPAS 1_0_0")         #carga el script de carga y remoción de capas  -----> funciones: carga_capas(ruta_arch, nombres_capas), remover_capas(capas_remover)
 ctrlcapa = importlib.import_module("LIBRERIA.CONTROL DE CAPA 1_0_0")    #carga el script de control de capas  -----> funciones: apagacapa(capa_a_apagar), encendercapa(capa_a_encender)
 ctrlgrup = importlib.import_module("LIBRERIA.CONTROL DE GRUPO 1_0_0")   #carga el script de control de grupos
@@ -51,6 +52,7 @@ renombra = importlib.import_module("LIBRERIA.RENOMBRAR_CAPA_1_0_0")       #carga
 
 # -------------------------------------------------------------------------------
 # Preliminares
+dbas.datosbasicos() # define los datos básicos del proyecto y crea el archivo txt correspondiente
 formato.formato_layout("Preparacion")
 capas = arcpy.mapping.ListLayers(mxd)
 for capa in capas:
