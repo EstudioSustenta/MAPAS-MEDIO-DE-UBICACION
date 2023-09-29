@@ -28,7 +28,7 @@ def rutacarp():
 
     
 # Agrega la ruta del paquete al path de Python
-ruta_libreria = "Q:/09 SISTEMAS INFORMATICOS/GIS_PYTON"
+ruta_libreria = "Q:/09 SISTEMAS INFORMATICOS/GIS_PYTON/SOPORTE_GIS"
 sys.path.append(ruta_libreria)
 
 arcpy.env.mxd = arcpy.mapping.MapDocument("CURRENT")                    # Obtener acceso al documento actual
@@ -38,20 +38,20 @@ df = arcpy.env.df
 
 # Importar el módulo desde el paquete LIBRERIA utilizando importlib
 dbas = importlib.import_module("LIBRERIA.DATOS BASICOS")
-ccapas = importlib.import_module("LIBRERIA.CARGAR CAPAS 1_0_0")         #carga el script de carga y remoción de capas  -----> funciones: carga_capas(ruta_arch, nombres_capas), remover_capas(capas_remover)
-ctrlcapa = importlib.import_module("LIBRERIA.CONTROL DE CAPA 1_0_0")    #carga el script de control de capas  -----> funciones: apagacapa(capa_a_apagar), encendercapa(capa_a_encender)
-ctrlgrup = importlib.import_module("LIBRERIA.CONTROL DE GRUPO 1_0_0")   #carga el script de control de grupos
-exportma = importlib.import_module("LIBRERIA.EXPORTAR MAPAS 1_0_0")     #carga el script para exportar mapas a pdf y jpg
-filtro = importlib.import_module("LIBRERIA.FILTRO 1_0_0")               #carga el script para aplicar filtros a una capa
-formato = importlib.import_module("LIBRERIA.FORMATO 1_0_0")             #carga el script para aplicar formato a layout
-simbologia = importlib.import_module("LIBRERIA.SIMBOLOGIA_LYR 1_0_0")   #carga el script para aplicar simbología a capas
-z_extent = importlib.import_module("LIBRERIA.ZOOM EXTENT 1_0_0")        #carga el script para aplicar zoom extent a una capa 
-act_rot = importlib.import_module("LIBRERIA.ACTIVA ROTULOS 1_0_0")      #carga el script para activar y desactivar los rótulos de una capa  -----> funciones: 
-buff_cl = importlib.import_module("LIBRERIA.BUFFER_CLIP 1_0_0")         #carga el script para activar y desactivar los rótulos de una capa  -----> funciones: clip(ruta, radio)
-transp = importlib.import_module("LIBRERIA.APLICA TRANSPARENCIA 1_0_0")   #carga el script para aplicar transparencia a capas
-renombra = importlib.import_module("LIBRERIA.RENOMBRAR_CAPA_1_0_0")       #carga el script para cambiar el nombre a capas
-urbano =   importlib.import_module("LIBRERIA.URBANO NACIONAL 1_0_0")        # ejecuta rutina de zonas urbanas
-rural =   importlib.import_module("LIBRERIA.RURAL_NACIONAL_1_0_0")        # ejecuta rutina de zonas rurales
+ccapas = importlib.import_module("LIBRERIA.CARGAR CAPAS")         #carga el script de carga y remoción de capas  -----> funciones: carga_capas(ruta_arch, nombres_capas), remover_capas(capas_remover)
+ctrlcapa = importlib.import_module("LIBRERIA.CONTROL DE CAPA")    #carga el script de control de capas  -----> funciones: apagacapa(capa_a_apagar), encendercapa(capa_a_encender)
+ctrlgrup = importlib.import_module("LIBRERIA.CONTROL DE GRUPO")   #carga el script de control de grupos
+exportma = importlib.import_module("LIBRERIA.EXPORTAR MAPAS")     #carga el script para exportar mapas a pdf y jpg
+filtro = importlib.import_module("LIBRERIA.FILTRO")               #carga el script para aplicar filtros a una capa
+formato = importlib.import_module("LIBRERIA.FORMATO")             #carga el script para aplicar formato a layout
+simbologia = importlib.import_module("LIBRERIA.SIMBOLOGIA LYR")   #carga el script para aplicar simbología a capas
+z_extent = importlib.import_module("LIBRERIA.ZOOM EXTENT")        #carga el script para aplicar zoom extent a una capa 
+act_rot = importlib.import_module("LIBRERIA.ACTIVA ROTULOS")      #carga el script para activar y desactivar los rótulos de una capa  -----> funciones: 
+buff_cl = importlib.import_module("LIBRERIA.BUFFER CLIP")         #carga el script para activar y desactivar los rótulos de una capa  -----> funciones: clip(ruta, radio)
+transp = importlib.import_module("LIBRERIA.APLICA TRANSPARENCIA")   #carga el script para aplicar transparencia a capas
+renombra = importlib.import_module("LIBRERIA.RENOMBRAR CAPA")       #carga el script para cambiar el nombre a capas
+urbano = importlib.import_module("LIBRERIA.URBANO NACIONAL")        # ejecuta rutina de zonas urbanas
+rural = importlib.import_module("LIBRERIA.RURAL NACIONAL")        # ejecuta rutina de zonas rurales
 dwgs = importlib.import_module("LIBRERIA.CUADRO DE LOCALIZACION")
 servicios = importlib.import_module("LIBRERIA.SERVICIOS")
 cliptema = importlib.import_module("LIBRERIA.CLIP TEMATICO")
@@ -291,13 +291,13 @@ def lineasElectricas(nummapa):
 
         # near a Linea de transmision electrica
     rutaorigen = rutaor + "/"
-    capa = capas[0]                                    
-    distancia = 50                                                 
-    campo = "NEAR_DIST"                                            
-    valor = -1                                                     
-    camporef = "TIPO"                                            
-    archivo = capa + " near"                                       
-    cantidad = 20       
+    capa = capas[0]
+    distancia = 50
+    campo = "NEAR_DIST"
+    valor = -1
+    camporef = "TIPO"
+    archivo = capa + " near"
+    cantidad = 20
     nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
 
 
