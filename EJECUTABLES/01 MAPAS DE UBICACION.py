@@ -45,6 +45,36 @@ act_rot = importlib.import_module("LIBRERIA.ACTIVA ROTULOS 1_0_0")      #carga e
 buff_cl = importlib.import_module("LIBRERIA.BUFFER_CLIP 1_0_0")         #carga el script para activar y desactivar los rótulos de una capa  -----> funciones: clip(ruta, radio)
 transp = importlib.import_module("LIBRERIA.APLICA TRANSPARENCIA 1_0_0")   #carga el script para aplicar transparencia a capas
 renombra = importlib.import_module("LIBRERIA.RENOMBRAR_CAPA_1_0_0")       #carga el script para cambiar el nombre a capas
+urbano =   importlib.import_module("LIBRERIA.URBANO NACIONAL 1_0_0")        # ejecuta rutina de zonas urbanas
+rural =   importlib.import_module("LIBRERIA.RURAL_NACIONAL_1_0_0")        # ejecuta rutina de zonas rurales
+dwgs = importlib.import_module("LIBRERIA.CUADRO DE LOCALIZACION")
+servicios = importlib.import_module("LIBRERIA.SERVICIOS")
+cliptema = importlib.import_module("LIBRERIA.CLIP TEMATICO")
+idproy = importlib.import_module("LIBRERIA.IDENTITY SISTEMA")
+nearexp = importlib.import_module("LIBRERIA.NEAR A SISTEMA")
+
+
+
+reload(dbas)
+reload(ccapas)
+reload(ctrlcapa)
+reload(ctrlgrup)
+reload(exportma)
+reload(filtro)
+reload(formato)
+reload(simbologia)
+reload(z_extent)
+reload(act_rot)
+reload(buff_cl)
+reload(transp)
+reload(renombra)
+reload(urbano)
+reload(rural)
+reload(dwgs)
+reload(servicios)
+reload(cliptema)
+reload(idproy)
+reload(nearexp)
 
 
     # nota, para poder cargar las librería y que se genere el archivo .pyc adecuadamente, cada librería debe iniciar con la línea: # -*- coding: utf-8 -*-
@@ -54,9 +84,10 @@ renombra = importlib.import_module("LIBRERIA.RENOMBRAR_CAPA_1_0_0")       #carga
 # Preliminares
 dbas.datosbasicos() # define los datos básicos del proyecto y crea el archivo txt correspondiente
 formato.formato_layout("Preparacion")
+
 capas = arcpy.mapping.ListLayers(mxd)
 for capa in capas:
-    print capa.name
+    # print capa.name
     if capa.name == "SISTEMA":
         capa.name = arcpy.env.proyecto
         arcpy.RefreshActiveView()
@@ -69,7 +100,6 @@ nombre_capa = "ESTATAL"
 ruta_arch = "Y:/0_SIG_PROCESO/BASES DE DATOS/00 MEXICO/0 UBICACION"
 ccapas.carga_capas(ruta_arch, nombre_capa)
 layout_name = "Layout"
-nombre_capa = nombre_capa
 z_extent.zoom_extent(layout_name, nombre_capa)
 simbologia.aplica_simb(nombre_capa)
 formato.formato_layout("UBICACIÓN A NIVEL PAÍS")
@@ -114,7 +144,6 @@ ccapas.remover_capas("Manzanas urbanas")
 if not arcpy.env.localidad == "Zona no urbanizada":
     # proceso si el sistema es urbano
     print("Iniciando proceso urbano")
-    urbano =   importlib.import_module("LIBRERIA.URBANO NACIONAL 1_0_0")        # ejecuta rutina de zonas urbanas
     # reload(urbano)
     urbano.purbano()
 
@@ -122,13 +151,11 @@ if not arcpy.env.localidad == "Zona no urbanizada":
 else:
     # proceso si el sistema es rural
     print("Iniciando Proceso rural")
-    rural =   importlib.import_module("LIBRERIA.RURAL_NACIONAL_1_0_0")        # ejecuta rutina de zonas rurales
     rural.prural("abc")
 
 # -------------------------------------------------------------------------------
 # Proceso para generar cuadros de construcción en formato dwg
 
-dwgs = importlib.import_module("LIBRERIA.CUADRO DE LOCALIZACION")
 # reload(dwgs)
 dwgs.dxf("aaaa")
 
@@ -140,8 +167,7 @@ dwgs.dxf("aaaa")
 if  arcpy.env.localidad != "Zona no urbanizada":
     # proceso si el sistema es urbano
     print("Iniciando proceso de servicios urbanos")
-    servicios = importlib.import_module("LIBRERIA.SERVICIOS")
-    reload(servicios)
+    servicios.servicios()
 
 
 # -------------------------------------------------------------------------------
@@ -149,12 +175,9 @@ if  arcpy.env.localidad != "Zona no urbanizada":
 # -------------------------------------------------------------------------------
 # Proceso para el medio físico natural
 
-cliptema = importlib.import_module("LIBRERIA.CLIP TEMATICO")
-idproy = importlib.import_module("LIBRERIA.IDENTITY SISTEMA")
-
 #-----------------> USO DE SUELO<------------------------------------------
     # tabla
-rutaCl = "Y:/0_SIG_PROCESO/BASES DE DATOS/00 MEXICO/INEGI/" # ruta del archivo a identificar
+rutaCl = "Y:/0_SIG_PROCESO/BASES DE DATOS/00 MEXICO/INEGI" # ruta del archivo a identificar
 capaCl = "USO DE SUELO INEGI SERIE IV.shp" # archivo a identificar
 capa_salida = "Uso de suelo" # capa a crear en el mapa
 camposCons = ["DESCRIP", "INFYS_0409", "VEG_FORES", 
@@ -182,7 +205,7 @@ cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
 
     # mapa
 capas = ["Curvas de nivel"]
-rutas = ["Y:/0_SIG_PROCESO/BASES DE DATOS/00 MEXICO/INEGI"]
+rutas = ["Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84"]
 tipo = "municipal"
 ncampo = "ALTURA"
 nummapa = "10"
@@ -202,9 +225,7 @@ nummapa = "11"
 tit = "Hidrologia"
 cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
 
-nearexp = importlib.import_module("LIBRERIA.NEAR A SISTEMA")
-
-    # near a Linea de transmision electrica
+    # near a corrientes de agua
 rutaorigen = rutaor + "/"
 capa = capas[0]
 distancia = 50
@@ -213,9 +234,11 @@ valor = -1
 camporef = "NOMBRE"
 archivo = capa + " near"
 cantidad = 20
+print ("iniciando proceso para " + capa)
 nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
 
     # near a cuerpos de agua
+reload(nearexp)
 rutaorigen = rutaor + "/"
 capa = capas[1]
 distancia = 50
@@ -224,6 +247,7 @@ valor = -1
 camporef = "NOMBRE"
 archivo = capa + " near"
 cantidad = 20
+print ("iniciando proceso para " + capa)
 nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
 
 
@@ -239,7 +263,9 @@ nummapa = "12"
 tit = u"Líneas de transmisión eléctrica"
 cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
 
-nearexp = importlib.import_module("NEAR A SISTEMA")
+tipo = "municipal"
+nummapa = "13"
+cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
 
     # near a Linea de transmision electrica
 rutaorigen = rutaor + "/"
@@ -247,7 +273,49 @@ capa = capas[0]
 distancia = 50
 campo = "NEAR_DIST"
 valor = -1
-camporef = "CODIGO"
+camporef = "TIPO"
 archivo = capa + " near"
 cantidad = 20
-nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
+nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
+
+
+
+#-----------------> MALPAIS<------------------------------------------
+    # tabla
+rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
+capaCl = "Malpais.shp" # archivo a identificar
+capa_salida = "Malpais" # capa a crear en el mapa
+camposCons = ["GEOGRAFICO", "IDENTIFICA"] # campos a escribir en el archivo
+dAlter = [u"IDENTIFICADOR GEOGRÁFICO", u"CLAVE DE IDENTIFICACIÓN"] # descriptores para los campos en el archivo txt de salida
+
+idproy.idproy(rutaCl, capaCl, capa_salida, camposCons, dAlter)
+
+    # mapa
+capas = ["Malpais"]
+rutas = [rutaCl]
+ncampo = "IDENTIFICA" # campo para el rótulo
+tipo = "estatal" # código para el nivel de representación
+nummapa = "14" # consecutivo para el número de mapa en el nombre del archivo
+tit = "MALPAIS INEGI SERIE IV"  # título del mapa en el layout
+cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
+
+
+
+#-----------------> PANTANO<------------------------------------------
+    # tabla
+rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
+capaCl = "Pantano.shp" # archivo a identificar
+capa_salida = "Pantano" # capa a crear en el mapa
+camposCons = ["GEOGRAFICO", "IDENTIFICA"] # campos a escribir en el archivo
+dAlter = [u"IDENTIFICADOR GEOGRÁFICO", u"CLAVE DE IDENTIFICACIÓN"] # descriptores para los campos en el archivo txt de salida
+
+idproy.idproy(rutaCl, capaCl, capa_salida, camposCons, dAlter)
+
+    # mapa
+capas = ["Pantano"]
+rutas = [rutaCl]
+ncampo = "IDENTIFICA" # campo para el rótulo
+tipo = "estatal" # código para el nivel de representación
+nummapa = str(int(nummapa) + 1) # consecutivo para el número de mapa en el nombre del archivo
+tit = "PANTANOS INEGI SERIE IV"  # título del mapa en el layout
+cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
