@@ -1,0 +1,1 @@
+arcpy.Buffer_analysis(in_features="PREDIO", out_feature_class="Q:/09 SISTEMAS INFORMATICOS/GIS_PYTON/PRUEBA2.shp", buffer_distance_or_field="30 Meters", line_side="FULL", line_end_type="FLAT", dissolve_option="NONE", dissolve_field="", method="PLANAR")
