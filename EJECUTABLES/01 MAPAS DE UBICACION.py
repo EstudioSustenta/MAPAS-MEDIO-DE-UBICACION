@@ -13,16 +13,17 @@ root = tk.Tk()
 root.withdraw()
 
 
+def rutacarp():
 
-# Abre un cuadro de diálogo para seleccionar una carpeta
-carp_mapas = "Y:/02 CLIENTES (EEX-CLI)/(2001-0001) FAMILIA MARTINEZ DEL RIO/(2008-PIN-0005) CASA BUENAVISTA/SIG"
-carpeta_cliente = tkFileDialog.askdirectory(initialdir=carp_mapas, title="Selecciona la carpeta destino de los mapas") + "/"
-arcpy.env.carp_cliente = carpeta_cliente
-# Verifica si el usuario seleccionó una carpeta
-if carpeta_cliente:
-    print("Ruta de la carpeta seleccionada: %s" % carpeta_cliente)
-else:
-    print("No se seleccionó ninguna carpeta.")
+    # Abre un cuadro de diálogo para seleccionar una carpeta
+    carp_mapas = "Y:/02 CLIENTES (EEX-CLI)/(2001-0001) FAMILIA MARTINEZ DEL RIO/(2008-PIN-0005) CASA BUENAVISTA/SIG"
+    carpeta_cliente = tkFileDialog.askdirectory(initialdir=carp_mapas, title="Selecciona la carpeta destino de los mapas") + "/"
+    arcpy.env.carp_cliente = carpeta_cliente
+    # Verifica si el usuario seleccionó una carpeta
+    if carpeta_cliente:
+        print("Ruta de la carpeta seleccionada: %s" % carpeta_cliente)
+    else:
+        print("No se seleccionó ninguna carpeta.")
 
 
     
@@ -88,7 +89,7 @@ reload(nearexp)
 # Preliminares
 
 
-dbas.datosbasicos() # define los datos básicos del proyecto y crea el archivo txt correspondiente
+
 formato.formato_layout("Preparacion")
 
 # elimina todas las capas, excepto "SISTEMA"
@@ -195,7 +196,7 @@ def serviciosCercanos():
 # -------------------------------------------------------------------------------
 # Proceso para el medio físico natural
 
-def usodeSuelo():
+def usodeSuelo(nummapa):
     #-----------------> USO DE SUELO<------------------------------------------
         # tabla
     rutaCl = "Y:/0_SIG_PROCESO/BASES DE DATOS/00 MEXICO/INEGI" # ruta del archivo a identificar
@@ -221,7 +222,7 @@ def usodeSuelo():
 
 
 
-def curvasdeNivel():
+def curvasdeNivel(nummapa):
     #----------------->CURVAS DE NIVEL<------------------------------------------
 
         # mapa
@@ -234,7 +235,7 @@ def curvasdeNivel():
     cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
 
 
-def hidrologia():
+def hidrologia(nummapa):
     #----------------->CORRIENTES Y CUERPOS DE AGUA<------------------------------------------
 
         # mapa
@@ -260,7 +261,6 @@ def hidrologia():
     nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
 
         # near a cuerpos de agua
-    reload(nearexp)
     rutaorigen = rutaor + "/"
     capa = capas[1]
     distancia = 50
@@ -272,7 +272,7 @@ def hidrologia():
     print ("iniciando proceso para " + capa)
     nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
 
-def lineasElectricas():
+def lineasElectricas(nummapa):
     #----------------->LINEAS DE TRANSMISIÓN ELECTRICA<------------------------------------------
 
         # mapa
@@ -301,7 +301,7 @@ def lineasElectricas():
     nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
 
 
-def malpais():
+def malpais(nummapa):
     #-----------------> MALPAIS<------------------------------------------
         # tabla
     rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
@@ -335,7 +335,7 @@ def malpais():
 
 
 
-def pantano():
+def pantano(nummapa):
     #-----------------> PANTANO<------------------------------------------
         # tabla
     rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
@@ -369,7 +369,7 @@ def pantano():
 
 
 
-def pistadeAviacion():
+def pistadeAviacion(nummapa):
     #-----------------> PISTA DE AVIACIÓN<------------------------------------------
         # tabla
     rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
@@ -403,7 +403,7 @@ def pistadeAviacion():
 
 
 
-def plantaGeneradora():
+def plantaGeneradora(nummapa):
     #-----------------> PLANTA GENERADORA<------------------------------------------
         # tabla
     rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
@@ -450,8 +450,8 @@ def presa(nummapa):
     rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
     capaCl = "Presa.shp" # archivo a identificar
     capa_salida = "Presa" # capa a crear en el mapa
-    camposCons = ["GEOGRAFICO", "IDENTIFICA", "NOMBRE", "CONDICION", "TIPO"] # campos a escribir en el archivo
-    dAlter = [u"IDENTIFICADOR GEOGRAFICO", u"CLAVE DE IDENTIFICACION", u"NOMBRE", u"CONDICION", u"TIPO"] # descriptores para los campos en el archivo txt de salida
+    camposCons = ["GEOGRAFICO", "IDENTIFICA", "NOMBRE", "CONDICION"] # campos a escribir en el archivo
+    dAlter = [u"IDENTIFICADOR GEOGRAFICO", u"CLAVE DE IDENTIFICACION", u"NOMBRE", u"CONDICION"] # descriptores para los campos en el archivo txt de salida
 
     # idproy.idproy(rutaCl, capaCl, capa_salida, camposCons, dAlter)
 
@@ -482,19 +482,147 @@ def presa(nummapa):
     nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
 
 
+def rasgoArqueologico(nummapa):
+
+    #-----------------> RASGO ARQUEOLOGICO<------------------------------------------
+        # tabla
+
+    rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
+    capaCl = "Rasgo arqueologico.shp" # archivo a identificar
+    capa_salida = "Rasgo arqueologico" # capa a crear en el mapa
+    camposCons = ["GEOGRAFICO", "IDENTIFICA", "NOMBRE", "TIPO"] # campos a escribir en el archivo
+    dAlter = ["IDENTIFICADOR GEOGRAFICO", "CLAVE DE IDENTIFICACION", "NOMBRE", "TIPO"] # descriptores para los campos en el archivo txt de salida
+
+    # idproy.idproy(rutaCl, capaCl, capa_salida, camposCons, dAlter)
+
+        # mapa
+    capas = ["Rasgo arqueologico"]
+    rutas = [rutaCl]
+    ncampo = "NOMBRE"                           # campo para el rótulo
+    tit = "Rasgo arqueologico".upper()                      # título del mapa en el layout
+
+    tipo = "nacional"                           # código para el nivel de representación
+    nummapa = nummapa + 1                       # consecutivo para el número de mapa en el nombre del archivo
+    cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit) 
+
+    tipo = "estatal"                            # código para el nivel de representación
+    nummapa = nummapa + 1                       # consecutivo para el número de mapa en el nombre del archivo
+    cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
+
+
+        # near 
+    rutaorigen = rutaCl + "/"                   # Ruta del archivo a analizar
+    capa = capas[0]                             # Capa a analizar
+    distancia = 1000                            # Distancia a realizar el análisis en km (incluye cualquier elemento que esté a esa distancia)
+    campo = "NEAR_DIST"                         # campo donde se guarda la distancia al sistema
+    valor = -1                                  # valor a eliminar del campo 'campo'
+    camporef = ncampo                           # campo de referencia (para agregar a la descripción del archivo)
+    archivo = capa + " near"                    # nombre del archivo de texto a generar
+    cantidad = 20                               # cantidad de registros más cercanos
+    nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
+
+def salina(nummapa):
+
+    #-----------------> SALINA<------------------------------------------
+        # tabla
+
+    rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
+    capaCl = "Salina.shp" # archivo a identificar
+    capa_salida = "Salina" # capa a crear en el mapa
+    camposCons = ["GEOGRAFICO", "IDENTIFICA", "NOMBRE", "TIPO"] # campos a escribir en el archivo
+    dAlter = ["IDENTIFICADOR GEOGRAFICO", "CLAVE DE IDENTIFICACION", "NOMBRE", "TIPO"] # descriptores para los campos en el archivo txt de salida
+
+    idproy.idproy(rutaCl, capaCl, capa_salida, camposCons, dAlter)
+
+        # mapa
+    capas = ["Salina"]
+    rutas = [rutaCl]
+    ncampo = "NOMBRE"                           # campo para el rótulo
+    tit = "Salina".upper()                      # título del mapa en el layout
+
+    tipo = "nacional"                           # código para el nivel de representación
+    nummapa = nummapa + 1                       # consecutivo para el número de mapa en el nombre del archivo
+    cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit) 
+
+    tipo = "estatal"                            # código para el nivel de representación
+    nummapa = nummapa + 1                       # consecutivo para el número de mapa en el nombre del archivo
+    cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
+
+
+        # near 
+    rutaorigen = rutaCl + "/"                   # Ruta del archivo a analizar
+    capa = capas[0]                             # Capa a analizar
+    distancia = 1000                            # Distancia a realizar el análisis en km (incluye cualquier elemento que esté a esa distancia)
+    campo = "NEAR_DIST"                         # campo donde se guarda la distancia al sistema
+    valor = -1                                  # valor a eliminar del campo 'campo'
+    camporef = ncampo                           # campo de referencia (para agregar a la descripción del archivo)
+    archivo = capa + " near"                    # nombre del archivo de texto a generar
+    cantidad = 20                               # cantidad de registros más cercanos
+    nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
+
+
+def subestacionelectrica(nummapa):
+
+    #-----------------> SALINA<------------------------------------------
+        # tabla
+
+    rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
+    capaCl = "Subestacion electrica.shp" # archivo a identificar
+    capa_salida = "Subestacion electrica" # capa a crear en el mapa
+    camposCons = ["GEOGRAFICO", "IDENTIFICA", "NOMBRE", "CONDICION"] # campos a escribir en el archivo
+    dAlter = ["IDENTIFICADOR GEOGRAFICO", "CLAVE DE IDENTIFICACION", "NOMBRE", "CONDICION"] # descriptores para los campos en el archivo txt de salida
+
+    idproy.idproy(rutaCl, capaCl, capa_salida, camposCons, dAlter)
+
+        # mapa
+    capas = ["Subestacion electrica"]
+    rutas = [rutaCl]
+    ncampo = "NOMBRE"                           # campo para el rótulo
+    tit = "Subestacion electrica".upper()                      # título del mapa en el layout
+
+    # tipo = "nacional"                           # código para el nivel de representación
+    # nummapa = nummapa + 1                       # consecutivo para el número de mapa en el nombre del archivo
+    # cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit) 
+
+    tipo = "estatal"                            # código para el nivel de representación
+    nummapa = nummapa + 1                       # consecutivo para el número de mapa en el nombre del archivo
+    cliptema.cliptema(rutas, capas, tipo, ncampo, nummapa, tit)
+
+
+        # near 
+    rutaorigen = rutaCl + "/"                   # Ruta del archivo a analizar
+    capa = capas[0]                             # Capa a analizar
+    distancia = 1000                            # Distancia a realizar el análisis en km (incluye cualquier elemento que esté a esa distancia)
+    campo = "NEAR_DIST"                         # campo donde se guarda la distancia al sistema
+    valor = -1                                  # valor a eliminar del campo 'campo'
+    camporef = ncampo                           # campo de referencia (para agregar a la descripción del archivo)
+    archivo = capa + " near"                    # nombre del archivo de texto a generar
+    cantidad = 20                               # cantidad de registros más cercanos
+    nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
+
+
+
+
 nummapa = 9
-# mapaPais(nummapa)
-# mapaEstatal(nummapa)
-# mapaMunicipal(nummapa)
-# cuadroConstruccion(nummapa)
-# serviciosCercanos(nummapa)
-# usodeSuelo(nummapa)
-# curvasdeNivel(nummapa)
-# hidrologia(nummapa)
-# lineasElectricas(nummapa)
-# malpais(nummapa)
-# pantano(nummapa)
-# pistadeAviacion(nummapa)
-# plantnummapaaGeneradora()
-presa(nummapa)
+dbas.datosbasicos() # define los datos básicos del proyecto y crea el archivo txt correspondiente
+rutacarp()
+mapaPais()
+mapaEstatal()
+mapaMunicipal()
+cuadroConstruccion()
+serviciosCercanos()
+usodeSuelo(nummapa + 1)
+curvasdeNivel(nummapa + 1)
+hidrologia(nummapa + 1)
+lineasElectricas(nummapa + 1)
+malpais(nummapa + 1)
+pantano(nummapa + 1)
+pistadeAviacion(nummapa + 1)
+plantaGeneradora(nummapa + 1)
+presa(nummapa + 1) 
+rasgoArqueologico(nummapa + 1)
+salina(nummapa + 1)
+subestacionelectrica(nummapa + 1)
+
+print ("\n\n\n\n PROCESO SIG FINALIZADO!! \n\n No es necesario guardar el mapa. \n\n\n")
 
