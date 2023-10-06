@@ -38,6 +38,7 @@ arcpy.env.mxd = arcpy.mapping.MapDocument("CURRENT")                    # Obtene
 mxd = arcpy.env.mxd
 arcpy.env.df = arcpy.mapping.ListDataFrames(mxd)[0]
 df = arcpy.env.df
+arcpy.env.layout = "Layout"
 
 # Importar el módulo desde el paquete LIBRERIA utilizando importlib
 dbas = importlib.import_module("LIBRERIA.datos_basicos")
@@ -104,26 +105,26 @@ def cargalib():
     log = importlib.import_module("LIBRERIA.archivo_log")
     leyenda = importlib.import_module("LIBRERIA.leyenda_ajuste")
     
-    # reload(ctrlcapa)
-    # reload(ctrlgrup)
-    # reload(exportma)
-    # reload(filtro)
-    # reload(formato)
-    # reload(simbologia)
-    # reload(z_extent)
-    # reload(act_rot)
-    # reload(buff_cl)
-    # reload(transp)
-    # reload(renombra)
-    # reload(urbano)
-    # reload(rural)
-    # reload(dwgs)
-    # reload(servicios)
-    # reload(cliptema)
-    # reload(idproy)
-    # reload(nearexp)
-    # reload(log)
-    # reload(leyenda)
+    reload(ctrlcapa)
+    reload(ctrlgrup)
+    reload(exportma)
+    reload(filtro)
+    reload(formato)
+    reload(simbologia)
+    reload(z_extent)
+    reload(act_rot)
+    reload(buff_cl)
+    reload(transp)
+    reload(renombra)
+    reload(urbano)
+    reload(rural)
+    reload(dwgs)
+    reload(servicios)
+    reload(cliptema)
+    reload(idproy)
+    reload(nearexp)
+    reload(log)
+    reload(leyenda)
 
     formato.formato_layout("Preparacion")
 
@@ -171,7 +172,6 @@ def mapaPais(nummapa):
     nombre_capa = "ESTATAL decr185"
     ruta_arch = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84/GEOPOLITICOS"
     ccapas.carga_capas(ruta_arch, nombre_capa)
-    arcpy.env.layout = "Layout"
     act_rot.activar_rotulos(nombre_capa,"NOM_ENT")
     z_extent.zoom_extent(arcpy.env.layout, nombre_capa)
     simbologia.aplica_simb(nombre_capa)
@@ -698,27 +698,129 @@ def salina(nummapa):
 
 
 
+def viaferrea(nummapa):
+
+    #-----------------> VIA FERREA<------------------------------------------
+
+    log.log(u"Proceso 'Vía Ferrea' iniciando...")
+
+        # tabla
+
+    rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
+    capaCl = "Via ferrea.shp" # archivo a identificar
+    capa_salida = "Via ferrea" # capa a crear en el mapa
+    camposCons = ["GEOGRAFICO", "IDENTIFICA", "CONDICION", "TIPO"] # campos a escribir en el archivo
+    dAlter = ["IDENTIFICADOR GEOGRAFICO", "CLAVE DE IDENTIFICACION", "CONDICION", "TIPO"] # descriptores para los campos en el archivo txt de salida
+
+    # idproy.idproy(rutaCl, capaCl, capa_salida, camposCons, dAlter)
+
+        
+    capas = ["Via ferrea"]
+    rutas = [rutaCl]
+    ncampo = ["TIPO"]                         # campo para el rótulo
+    tit = capa_salida.upper()                      # título del mapa en el layout
+
+        # near 
+    rutaorigen = rutaCl + "/"                   # Ruta del archivo a analizar
+    capa = capas[0]                             # Capa a analizar
+    distancia = 1000                            # Distancia a realizar el análisis en km (incluye cualquier elemento que esté a esa distancia)
+    campo = "NEAR_DIST"                         # campo donde se guarda la distancia al sistema
+    valor = -1                                  # valor a eliminar del campo 'campo'
+    n=0
+    camporef = ncampo[n]                        # campo de referencia (para agregar a la descripción del archivo)
+    archivo = capa + " near"                    # nombre del archivo de texto a generar para proceso 'near'
+    cantidad = 20                               # cantidad de registros más cercanos
+    nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
+
+        # mapa
+    tipo = "nacional"                           # código para el nivel de representación
+    nummapa = arcpy.env.nummapa                       # consecutivo para el número de mapa en el nombre del archivo
+    ordinal = 0
+    cliptema.clipt(rutas, capas, tipo, ncampo, nummapa, tit, ordinal) 
+
+    tipo = "estatal"                            # código para el nivel de representación
+    nummapa = arcpy.env.nummapa                       # consecutivo para el número de mapa en el nombre del archivo
+    ordinal = 5
+    cliptema.clipt(rutas, capas, tipo, ncampo, nummapa, tit, ordinal)
+    log.log(u"Proceso 'Via ferrea' finalizado! \n\n")
+
+
+
+
+def zonaarenosa(nummapa):
+
+    #-----------------> ZONA ARENOSA<------------------------------------------
+
+    log.log(u"Proceso 'Zona arenosa' iniciando...")
+
+        # tabla
+
+    rutaCl = "Y:/GIS/MEXICO/VARIOS/INEGI/Mapa Digital 6/WGS84" # ruta del archivo a identificar
+    capaCl = "Zona arenosa.shp" # archivo a identificar
+    capa_salida = "Zona arenosa" # capa a crear en el mapa
+    camposCons = ["GEOGRAFICO", "IDENTIFICA", "CALI_REPR", "TIPO"] # campos a escribir en el archivo
+    dAlter = ["IDENTIFICADOR GEOGRAFICO", "CLAVE DE IDENTIFICACION", "CALIDAD DE REPRESENTACION", "TIPO"] # descriptores para los campos en el archivo txt de salida
+
+    idproy.idproy(rutaCl, capaCl, capa_salida, camposCons, dAlter)
+
+        
+    capas = ["Zona arenosa"]
+    rutas = [rutaCl]
+    ncampo = ["TIPO"]                         # campo para el rótulo
+    tit = capa_salida.upper()                      # título del mapa en el layout
+
+        # near 
+    rutaorigen = rutaCl + "/"                   # Ruta del archivo a analizar
+    capa = capas[0]                             # Capa a analizar
+    distancia = 1000                            # Distancia a realizar el análisis en km (incluye cualquier elemento que esté a esa distancia)
+    campo = "NEAR_DIST"                         # campo donde se guarda la distancia al sistema
+    valor = -1                                  # valor a eliminar del campo 'campo'
+    n=0
+    camporef = ncampo[n]                        # campo de referencia (para agregar a la descripción del archivo)
+    archivo = capa + " near"                    # nombre del archivo de texto a generar para proceso 'near'
+    cantidad = 20                               # cantidad de registros más cercanos
+    nearexp.nearproceso(rutaorigen, capa, distancia, campo, valor, camporef, archivo, cantidad)
+
+        # mapa
+    tipo = "nacional"                           # código para el nivel de representación
+    nummapa = arcpy.env.nummapa                       # consecutivo para el número de mapa en el nombre del archivo
+    ordinal = 0
+    cliptema.clipt(rutas, capas, tipo, ncampo, nummapa, tit, ordinal) 
+
+    tipo = "estatal"                            # código para el nivel de representación
+    nummapa = arcpy.env.nummapa                       # consecutivo para el número de mapa en el nombre del archivo
+    ordinal = 5
+    cliptema.clipt(rutas, capas, tipo, ncampo, nummapa, tit, ordinal)
+    log.log(u"Proceso 'Zona arenosa' finalizado! \n\n")
+
+
+
+
+
 
 rutacarp()
 db()
 cargalib()
 borrainn()
-arcpy.env.nummapa = 1
-mapaPais(arcpy.env.nummapa)
-mapaEstatal(arcpy.env.nummapa)
-mapaMunicipal(arcpy.env.nummapa)
-cuadroConstruccion()
-servicios_urbanos(arcpy.env.nummapa)
-usodeSuelo(arcpy.env.nummapa)
-curvasdeNivel(arcpy.env.nummapa)
-hidrologia(arcpy.env.nummapa)
-lineasElectricas(arcpy.env.nummapa)
-malpais(arcpy.env.nummapa)
-pantano(arcpy.env.nummapa)
-pistadeAviacion(arcpy.env.nummapa)
-presa(arcpy.env.nummapa) 
-rasgoArqueologico(arcpy.env.nummapa)
-salina(arcpy.env.nummapa)
+arcpy.env.nummapa = 21
+nummapa = 1 # línea temporal cuando no se tiene definido el número de mapa
+# mapaPais(arcpy.env.nummapa)
+# mapaEstatal(arcpy.env.nummapa)
+# mapaMunicipal(arcpy.env.nummapa)
+# cuadroConstruccion()
+# servicios_urbanos(arcpy.env.nummapa)
+# curvasdeNivel(arcpy.env.nummapa)
+# hidrologia(arcpy.env.nummapa)
+# lineasElectricas(arcpy.env.nummapa)
+# malpais(arcpy.env.nummapa)
+# pantano(arcpy.env.nummapa)
+# pistadeAviacion(arcpy.env.nummapa)
+# presa(arcpy.env.nummapa) 
+# rasgoArqueologico(arcpy.env.nummapa)
+# salina(arcpy.env.nummapa)
+# usodeSuelo(arcpy.env.nummapa)
+# viaferrea(nummapa)
+# zonaarenosa(nummapa)
 
 
 log.log(u"\n\n PROCESO SIG FINALIZADO!!")
