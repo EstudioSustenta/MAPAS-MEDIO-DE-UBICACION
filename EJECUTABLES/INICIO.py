@@ -3,7 +3,6 @@
 # ----PROGRAMA PARA SELECCIÓN DE PROYECTO
 
 import sys
-import importlib
 import tkinter as tk
 from tkinter import ttk
 import arcpy
@@ -13,8 +12,7 @@ import arcpy
 ruta_libreria = "Q:/09 SISTEMAS INFORMATICOS/GIS_PYTON/SOPORTE_GIS"
 sys.path.append(ruta_libreria)
 
-
-gensis = importlib.import_module("LIBRERIA.generacion_sistema")
+from LIBRERIA import generacion_sistema as gensis
 # reload(gensis)
 
 def ini():
